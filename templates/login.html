@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Log in — Crop Advisor{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:420px; margin:0 auto;">
+  <h2>🌾 Crop Advisor</h2>
+  <p class="tagline">AI-powered insights for modern farming</p>
+  <p class="subtitle">Welcome back — sign in to your dashboard.</p>
+  <form method="POST">
+    <label for="login-username">Username</label>
+    <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
+    <label for="login-password">Password</label>
+    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+    <button type="submit" class="btn-full">Sign In</button>
+  </form>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <p class="muted" style="margin-top: 20px; text-align: center;">
+    Don't have an account? <a href="{{ url_for('signup') }}">Create one</a>
+  </p>
+</div>
+{% endblock %}

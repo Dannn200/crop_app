@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Dashboard — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <p class="greeting">Good {{ greeting }}, {{ session.username }}.</p>
+  <h1>Crop Advisor</h1>
+  <p class="page-desc">AI-powered crop yield prediction and agricultural intelligence.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_records | default('28,242') }}</div>
+    <div class="stat-label">Dataset Records</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_countries | default('101') }}</div>
+    <div class="stat-label">Countries</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_crops | default('10') }}</div>
+    <div class="stat-label">Crop Types</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="stat-value">{{ model_accuracy | default('—') }}</div>
+    <div class="stat-label">Model R² Score</div>
+  </div>
+</div>
+
+<h2 class="section-title">Quick Actions</h2>
+<div class="quick-actions">
+  <a href="{{ url_for('upload') }}" class="action-card" id="action-upload">
+    <div class="action-icon green">📂</div>
+    <div class="action-text">
+      <h3>Upload Dataset</h3>
+      <p>Import a CSV file for analysis</p>
+    </div>
+  </a>
+  <a href="{{ url_for('predict_yield_page') }}" class="action-card" id="action-predict">
+    <div class="action-icon green">🌱</div>
+    <div class="action-text">
+      <h3>Predict Yield</h3>
+      <p>Estimate crop production</p>
+    </div>
+  </a>
+  <a href="{{ url_for('weather') }}" class="action-card" id="action-weather">
+    <div class="action-icon gold">🌤️</div>
+    <div class="action-text">
+      <h3>Weather</h3>
+      <p>View current conditions</p>
+    </div>
+  </a>
+  <a href="{{ url_for('analytics') }}" class="action-card" id="action-analytics">
+    <div class="action-icon gold">📊</div>
+    <div class="action-text">
+      <h3>Analytics</h3>
+      <p>Explore data insights</p>
+    </div>
+  </a>
+</div>
+{% endblock %}

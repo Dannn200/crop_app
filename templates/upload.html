@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Dataset — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Upload Dataset</h1>
+  <p class="page-desc">Import a CSV file with crop yield data for analysis and model training.</p>
+</div>
+
+<div class="panel">
+  <h3 style="margin-bottom: 6px;">Upload CSV File</h3>
+  <p class="muted" style="margin-bottom: 20px;">
+    Expected columns: <strong>Area</strong>, <strong>Item</strong>, <strong>Year</strong>,
+    <strong>hg/ha_yield</strong>, <strong>average_rain_fall_mm_per_year</strong>,
+    <strong>pesticides_tonnes</strong>, <strong>avg_temp</strong>
+  </p>
+  <form method="POST" enctype="multipart/form-data">
+    <label for="dataset-file">Dataset (.csv)</label>
+    <input type="file" id="dataset-file" name="dataset" accept=".csv" required>
+    <button type="submit">Upload &amp; Preview</button>
+  </form>
+  {% if message %}<div class="error">{{ message }}</div>{% endif %}
+  <p class="muted mt-24">
+    Don't have a file handy?
+    <a href="{{ url_for('use_sample') }}"><strong>Use the built-in yield dataset</strong></a> instead.
+  </p>
+</div>
+{% endblock %}

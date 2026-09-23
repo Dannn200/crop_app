@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Training — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Model Training</h1>
+  <p class="page-desc">Train a machine learning model on your crop yield dataset.</p>
+</div>
+
+<div class="panel">
+  <div class="train-grid">
+    <div class="train-info-card">
+      <div class="info-label">Dataset</div>
+      <div class="info-value">{{ dataset_name }}</div>
+    </div>
+    <div class="train-info-card">
+      <div class="info-label">Model</div>
+      <div class="info-value">Random Forest Regressor</div>
+    </div>
+    <div class="train-info-card">
+      <div class="info-label">Training Samples</div>
+      <div class="info-value">{{ train_samples }}</div>
+    </div>
+    <div class="train-info-card">
+      <div class="info-label">Test Samples</div>
+      <div class="info-value">{{ test_samples }}</div>
+    </div>
+    <div class="train-info-card">
+      <div class="info-label">Status</div>
+      <div class="info-value status-trained">● Model Trained</div>
+    </div>
+    <div class="train-info-card">
+      <div class="info-label">Features</div>
+      <div class="info-value">{{ num_features }}</div>
+    </div>
+  </div>
+
+  <h3 class="section-title mt-24">Performance Metrics</h3>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-value">{{ r2_score }}%</div>
+      <div class="metric-label">R² Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">{{ mae }}</div>
+      <div class="metric-label">MAE (hg/ha)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">{{ rmse }}</div>
+      <div class="metric-label">RMSE (hg/ha)</div>
+    </div>
+  </div>
+
+  {% if feature_importances %}
+  <div class="chart-section mt-24">
+    <h3>Feature Importance</h3>
+    <div style="overflow-x:auto;">
+      <table class="data-table" style="max-width:500px;">
+        <thead><tr><th>Feature</th><th>Importance</th></tr></thead>
+        <tbody>
+          {% for feat in feature_importances %}
+          <tr>
+            <td>{{ feat.name }}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="background:var(--primary);height:8px;border-radius:4px;width:{{ (feat.value * 100)|int }}%;min-width:4px;"></div>
+                <span>{{ "%.1f"|format(feat.value * 100) }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="mt-24">
+    <a class="btn" href="{{ url_for('predict_yield_page') }}">Predict Yield →</a>
+    <a class="btn btn-secondary" href="{{ url_for('analytics') }}" style="margin-left: 8px;">View Analytics</a>
+  </div>
+</div>
+{% endblock %}

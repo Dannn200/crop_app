@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Weather — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Weather Outlook</h1>
+  <p class="page-desc">View weather conditions relevant to your farming decisions.</p>
+</div>
+
+<div class="panel">
+  <h3 style="margin-bottom: 6px;">Check Local Conditions</h3>
+  <p class="muted" style="margin-bottom: 16px;">Generated from fixed city averages — not a live weather feed.</p>
+  <form method="POST">
+    <label for="weather-city">City</label>
+    <select id="weather-city" name="city" required>
+      {% for c in cities %}
+        <option value="{{ c }}" {% if c == city %}selected{% endif %}>{{ c | capitalize }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Get Outlook</button>
+  </form>
+
+  {% if forecast %}
+  <div class="forecast-row">
+    {% for day in forecast %}
+      <div class="forecast-day">
+        <div class="day-label">Day {{ day.day }}</div>
+        <div class="day-temp">{{ day.temp }}°C</div>
+        <div class="day-humidity">{{ day.humidity }}% humidity</div>
+        <div class="cond {% if day.condition == 'Rain' %}cond-rain{% else %}cond-clear{% endif %}">
+          {% if day.condition == 'Rain' %}🌧️{% else %}☀️{% endif %} {{ day.condition }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="weather-rec">
+    <strong>Advisory:</strong> {{ recommendation }}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Preview — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Dataset Preview</h1>
+  <p class="page-desc">Your crop yield dataset — {{ rows }} records across {{ num_countries }} countries and {{ num_crops }} crop types.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ '{:,}'.format(rows) }}</div>
+    <div class="stat-label">Records</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ num_features }}</div>
+    <div class="stat-label">Features</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ num_crops }}</div>
+    <div class="stat-label">Crop Types</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ num_countries }}</div>
+    <div class="stat-label">Countries</div>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="table-toolbar">
+    <div class="search-input">
+      <input type="text" id="tableSearch" placeholder="Search dataset..." oninput="filterTable()">
+    </div>
+    <div>
+      <select id="cropFilter" onchange="filterTable()">
+        <option value="">All Crops</option>
+        {% for crop in crop_list %}
+          <option value="{{ crop }}">{{ crop }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table" id="dataTable">
+      <thead>
+        <tr>
+          {% for col in columns %}
+            <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        {% for row in table_data %}
+        <tr>
+          {% for val in row %}
+            {% if loop.index == item_col_idx %}
+              <td><span class="crop-badge">{{ val }}</span></td>
+            {% else %}
+              <td>{{ val }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="table-pagination">
+    <span id="pageInfo">Showing 1–20 of {{ rows }}</span>
+    <div class="pagination-controls" id="paginationControls">
+    </div>
+  </div>
+</div>
+
+<div class="mt-24">
+  <a class="btn" href="{{ url_for('train') }}">Train Model on This Data</a>
+</div>
+
+<script>
+(function() {
+  const ROWS_PER_PAGE = 20;
+  const tbody = document.getElementById('tableBody');
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const pageInfo = document.getElementById('pageInfo');
+  const pagCtrl = document.getElementById('paginationControls');
+  let filtered = allRows;
+  let currentPage = 1;
+
+  window.filterTable = function() {
+    const q = document.getElementById('tableSearch').value.toLowerCase();
+    const crop = document.getElementById('cropFilter').value.toLowerCase();
+    filtered = allRows.filter(function(row) {
+      const text = row.textContent.toLowerCase();
+      const matchQ = !q || text.indexOf(q) !== -1;
+      // Item column is index {{ item_col_idx - 1 }} (0-based)
+      const cells = row.querySelectorAll('td');
+      const itemCell = cells[{{ item_col_idx - 1 }}] ? cells[{{ item_col_idx - 1 }}].textContent.toLowerCase() : '';
+      const matchCrop = !crop || itemCell === crop;
+      return matchQ && matchCrop;
+    });
+    currentPage = 1;
+    render();
+  };
+
+  function render() {
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const end = Math.min(start + ROWS_PER_PAGE, total);
+
+    allRows.forEach(function(r) { r.style.display = 'none'; });
+    for (let i = start; i < end; i++) {
+      filtered[i].style.display = '';
+    }
+
+    pageInfo.textContent = 'Showing ' + (total ? start + 1 : 0) + '–' + end + ' of ' + total;
+
+    // Build pagination buttons
+    let html = '';
+    html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="goPage(' + (currentPage - 1) + ')">‹ Prev</button>';
+    const maxBtns = 5;
+    let pStart = Math.max(1, currentPage - 2);
+    let pEnd = Math.min(totalPages, pStart + maxBtns - 1);
+    if (pEnd - pStart < maxBtns - 1) pStart = Math.max(1, pEnd - maxBtns + 1);
+    for (let p = pStart; p <= pEnd; p++) {
+      html += '<button class="' + (p === currentPage ? 'pg-active' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+    }
+    html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="goPage(' + (currentPage + 1) + ')">Next ›</button>';
+    pagCtrl.innerHTML = html;
+  }
+
+  window.goPage = function(p) {
+    currentPage = p;
+    render();
+  };
+
+  render();
+})();
+</script>
+{% endblock %}

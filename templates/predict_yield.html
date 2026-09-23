@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% block title %}Yield Prediction — Crop Advisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Yield Prediction</h1>
+  <p class="page-desc">Enter conditions to predict crop yield using the trained model.</p>
+</div>
+
+<div class="panel">
+  <h3 style="margin-bottom: 20px;">Enter Prediction Parameters</h3>
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="pred-area">Country / Area</label>
+        <select id="pred-area" name="area" required>
+          <option value="">Select a country</option>
+          {% for a in areas %}
+            <option value="{{ a }}" {% if a == selected_area %}selected{% endif %}>{{ a }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pred-item">Crop</label>
+        <select id="pred-item" name="item" required>
+          <option value="">Select a crop</option>
+          {% for i in items %}
+            <option value="{{ i }}" {% if i == selected_item %}selected{% endif %}>{{ i }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pred-year">Year</label>
+        <input type="number" id="pred-year" name="year" placeholder="e.g. 2013" min="1990" max="2030" value="{{ selected_year or '' }}" required>
+      </div>
+      <div class="form-group">
+        <label for="pred-rain">Avg. Rainfall</label>
+        <div class="input-unit">
+          <input type="number" step="any" id="pred-rain" name="rainfall" placeholder="e.g. 1485" value="{{ selected_rain or '' }}" required>
+          <span class="unit">mm/yr</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pred-pest">Pesticides Used</label>
+        <div class="input-unit">
+          <input type="number" step="any" id="pred-pest" name="pesticides" placeholder="e.g. 121" value="{{ selected_pest or '' }}" required>
+          <span class="unit">tonnes</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pred-temp">Avg. Temperature</label>
+        <div class="input-unit">
+          <input type="number" step="any" id="pred-temp" name="avg_temp" placeholder="e.g. 16.37" value="{{ selected_temp or '' }}" required>
+          <span class="unit">°C</span>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn-full">Predict Yield</button>
+  </form>
+
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+  {% if result is not none %}
+  <div class="prediction-result">
+    <div class="result-label">Predicted Yield</div>
+    <div class="result-value">{{ '{:,.0f}'.format(result) }}</div>
+    <div class="result-unit">hg/ha (hectograms per hectare)</div>
+    <div class="result-details">
+      <div class="detail-item">Country: <strong>{{ selected_area }}</strong></div>
+      <div class="detail-item">Crop: <strong>{{ selected_item }}</strong></div>
+      <div class="detail-item">Year: <strong>{{ selected_year }}</strong></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

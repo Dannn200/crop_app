@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crop Advisor — AI-powered crop yield prediction and agricultural insights.">
+  <title>{% block title %}Crop Advisor{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% if request.path == '/' or request.path == '/signup' %}login-page{% else %}app-page{% endif %}">
+  {% if show_nav %}
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🌾</div>
+      Crop Advisor
+    </div>
+    <button class="hamburger" onclick="document.getElementById('mainNav').classList.toggle('open')" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="mainNav">
+      <a href="{{ url_for('dashboard') }}" class="{% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('upload') }}" class="{% if request.path == '/upload' %}active{% endif %}">Dataset</a>
+      <a href="{{ url_for('preview') }}" class="{% if request.path == '/preview' %}active{% endif %}">Preview</a>
+      <a href="{{ url_for('train') }}" class="{% if request.path == '/train' %}active{% endif %}">Train Model</a>
+      <a href="{{ url_for('predict_yield_page') }}" class="{% if request.path == '/predict_yield' %}active{% endif %}">Yield Prediction</a>
+      <a href="{{ url_for('weather') }}" class="{% if request.path == '/weather' %}active{% endif %}">Weather</a>
+      <a href="{{ url_for('analytics') }}" class="{% if request.path == '/analytics' %}active{% endif %}">Analytics</a>
+      <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
+    </nav>
+  </header>
+  {% endif %}
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
