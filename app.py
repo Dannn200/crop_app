@@ -46,19 +46,7 @@ state = {
     "users": {"admin": "admin"},
 }
 
-# Average local weather stats per city (unchanged)
-CITY_WEATHER_AVG = {
-    "chennai":    {"temp": 30, "humidity": 75, "rain_chance": 0.5},
-    "hyderabad":  {"temp": 28, "humidity": 55, "rain_chance": 0.3},
-    "bengaluru":  {"temp": 24, "humidity": 60, "rain_chance": 0.35},
-    "mumbai":     {"temp": 29, "humidity": 80, "rain_chance": 0.55},
-    "delhi":      {"temp": 27, "humidity": 45, "rain_chance": 0.2},
-    "kolkata":    {"temp": 29, "humidity": 78, "rain_chance": 0.5},
-    "pune":       {"temp": 26, "humidity": 55, "rain_chance": 0.3},
-    "jaipur":     {"temp": 28, "humidity": 40, "rain_chance": 0.15},
-    "lucknow":    {"temp": 27, "humidity": 50, "rain_chance": 0.25},
-    "amritsar":   {"temp": 25, "humidity": 50, "rain_chance": 0.25},
-}
+
 
 
 def login_required(func):
@@ -391,43 +379,7 @@ def predict_yield_page():
     )
 
 
-# ── Weather ──────────────────────────────────────────────────────────────────
 
-@app.route("/weather", methods=["GET", "POST"])
-@login_required
-def weather():
-    forecast = None
-    recommendation = None
-    city_used = None
-    if request.method == "POST":
-        city = request.form.get("city", "").strip().lower()
-        if city in CITY_WEATHER_AVG:
-            avg = CITY_WEATHER_AVG[city]
-            forecast = []
-            rainy_days = 0
-            for day in range(1, 4):
-                will_rain = random.random() < avg["rain_chance"]
-                if will_rain:
-                    rainy_days += 1
-                forecast.append({
-                    "day": day,
-                    "temp": round(avg["temp"] + random.uniform(-2, 2), 1),
-                    "humidity": round(avg["humidity"] + random.uniform(-5, 5), 1),
-                    "condition": "Rain" if will_rain else "Clear",
-                })
-            recommendation = (
-                "Heavy rain expected in the coming days — hold off on fertilizer."
-                if rainy_days >= 2
-                else "No major rain expected — safe to add fertilizer."
-            )
-            city_used = city
-    return render_template(
-        "weather.html",
-        forecast=forecast,
-        recommendation=recommendation,
-        city=city_used,
-        cities=sorted(CITY_WEATHER_AVG.keys()),
-    )
 
 
 @app.route("/charts/<path:filename>")

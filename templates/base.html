@@ -26,7 +26,7 @@
       <a href="{{ url_for('preview') }}" class="{% if request.path == '/preview' %}active{% endif %}">Preview</a>
       <a href="{{ url_for('train') }}" class="{% if request.path == '/train' %}active{% endif %}">Train Model</a>
       <a href="{{ url_for('predict_yield_page') }}" class="{% if request.path == '/predict_yield' %}active{% endif %}">Yield Prediction</a>
-      <a href="{{ url_for('weather') }}" class="{% if request.path == '/weather' %}active{% endif %}">Weather</a>
+
       <a href="{{ url_for('analytics') }}" class="{% if request.path == '/analytics' %}active{% endif %}">Analytics</a>
       <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
     </nav>

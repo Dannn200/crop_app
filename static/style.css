@@ -442,6 +442,7 @@ button, .btn {
 
 button:hover, .btn:hover {
   background: var(--primary-dark);
+  color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(36, 92, 54, 0.3);
 }
