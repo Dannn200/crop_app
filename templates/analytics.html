@@ -18,7 +18,7 @@
   <div class="chart-section">
     <h3>Crop Distribution in Training Data</h3>
     <p class="muted" style="margin-bottom: 16px;">Number of records per crop type in the dataset.</p>
-    <img class="chart" src="{{ url_for('static', filename='charts/distribution.png') }}" alt="Crop distribution chart">
+    <img class="chart" src="{{ url_for('serve_charts', filename='distribution.png') }}" alt="Crop distribution chart">
   </div>
 </div>
 {% endif %}
@@ -28,7 +28,7 @@
   <div class="chart-section">
     <h3>Feature Importance</h3>
     <p class="muted" style="margin-bottom: 16px;">How much each feature contributes to the yield prediction.</p>
-    <img class="chart" src="{{ url_for('static', filename='charts/feature_importance.png') }}" alt="Feature importance chart">
+    <img class="chart" src="{{ url_for('serve_charts', filename='feature_importance.png') }}" alt="Feature importance chart">
   </div>
 </div>
 {% endif %}
@@ -38,7 +38,7 @@
   <div class="chart-section">
     <h3>Average Yield by Crop</h3>
     <p class="muted" style="margin-bottom: 16px;">Mean yield (hg/ha) across all countries and years.</p>
-    <img class="chart" src="{{ url_for('static', filename='charts/yield_by_crop.png') }}" alt="Yield by crop chart">
+    <img class="chart" src="{{ url_for('serve_charts', filename='yield_by_crop.png') }}" alt="Yield by crop chart">
   </div>
 </div>
 {% endif %}

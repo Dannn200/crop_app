@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 import pandas as pd
 import numpy as np
 import os
@@ -18,8 +18,14 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 DATA_FOLDER = os.path.join(BASE_DIR, "data")
 CHARTS_DIR = os.path.join(BASE_DIR, "static", "charts")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(CHARTS_DIR, exist_ok=True)
+
+try:
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(CHARTS_DIR, exist_ok=True)
+except OSError:
+    # On read-only filesystems like Vercel, fallback to /tmp
+    UPLOAD_FOLDER = "/tmp"
+    CHARTS_DIR = "/tmp"
 
 # yield_df.csv columns (excluding the unnamed index):
 # Area, Item, Year, hg/ha_yield, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp
@@ -423,6 +429,10 @@ def weather():
         cities=sorted(CITY_WEATHER_AVG.keys()),
     )
 
+
+@app.route("/charts/<path:filename>")
+def serve_charts(filename):
+    return send_from_directory(CHARTS_DIR, filename)
 
 # ── Analytics ────────────────────────────────────────────────────────────────
 
